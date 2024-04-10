@@ -10,4 +10,4 @@ Este es el repositorio de *Modo Diablo*, cuyos integrantes son:
 
 ## Wiki
 
-Puede acceder a la Wiki mediante el siguiente 
+Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/LucasApaCode/GRP-MODODIABLO-2024-PROYINF/wiki#modo-diablo)
