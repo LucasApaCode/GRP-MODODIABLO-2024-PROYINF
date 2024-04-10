@@ -9,3 +9,5 @@ Este es el repositorio de *Modo Diablo*, cuyos integrantes son:
 * **Tutor**: Felipe Fernandez
 
 ## Wiki
+
+Puede acceder a la Wiki mediante el siguiente 
