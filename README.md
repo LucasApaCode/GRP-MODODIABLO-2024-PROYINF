@@ -6,7 +6,7 @@ Este es el repositorio de *Modo Diablo*, cuyos integrantes son:
 * Javiera Cortés - 2019046187
 * Lucas Apablaza - 202073593K
 * Maximiliano Pozo - 2019305360
-* **Tutor**: Felipe Fernandez
+* **Ayudante**: Felipe Fernandez
 
 ## Wiki
 
