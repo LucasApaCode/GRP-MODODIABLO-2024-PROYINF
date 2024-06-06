@@ -11,3 +11,6 @@ Este es el repositorio de *Modo Diablo*, cuyos integrantes son:
 ## Wiki
 
 Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/LucasApaCode/GRP-MODODIABLO-2024-PROYINF/wiki#modo-diablo)
+
+## Prototipo
+Puede acceder a la explicación del prototipo mediante el siguiente [enlace](https://drive.google.com/file/d/1BT_3Xa2TEcjVXb-RIsM4bcs98ynRlKmw/view?usp=sharing)
