@@ -43,7 +43,7 @@ class DICOMViewer(QMainWindow):
         self.modified_image = None
 
     def initUI(self):
-        # Configurar la interfaz moderna
+        
         self.setStyleSheet(
             """
             QWidget {
@@ -211,7 +211,7 @@ class DICOMViewer(QMainWindow):
             self.display_image(image)
 
     def display_image(self, image):
-        if len(image.shape) == 2:  # Grayscale image
+        if len(image.shape) == 2:  
             qimage = QImage(
                 image.data, image.shape[1], image.shape[0], QImage.Format_Grayscale8
             )
