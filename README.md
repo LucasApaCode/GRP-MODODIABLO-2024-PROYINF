@@ -14,3 +14,6 @@ Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/LucasA
 
 ## Prototipo
 Puede acceder a la explicación del prototipo mediante el siguiente [enlace](https://drive.google.com/file/d/1BT_3Xa2TEcjVXb-RIsM4bcs98ynRlKmw/view?usp=sharing)
+
+## Aplicación
+Puede acceder a un video demostrativo de la aplicación mediante el siguiente [enlace](https://drive.google.com/file/d/1TA1-HOAI_GZDDDC8WGXMxRrdCqSjDr6D/view?usp=sharing)
