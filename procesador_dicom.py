@@ -33,11 +33,10 @@ class DICOMViewer(QMainWindow):
         self.setWindowTitle("Visualizador DICOM")
         self.setGeometry(100, 100, 1000, 700)
 
-        # Cambiar el icono de la ventana
+        
         self.setWindowIcon(
             QIcon("ruta/al/icono.ico")
-        )  # Asegúrate de poner la ruta correcta al archivo de icono
-
+        )  
         self.initUI()
 
         self.original_image = None
@@ -172,7 +171,7 @@ class DICOMViewer(QMainWindow):
             self.update_image()
             self.save_button.setEnabled(
                 True
-            )  # Enable the save button after loading an image
+            )  
 
     def load_dicom_image(self, file_path):
         dicom = pydicom.dcmread(file_path)
@@ -183,22 +182,22 @@ class DICOMViewer(QMainWindow):
         if self.original_image is not None:
             image = self.original_image.copy()
 
-            # Apply contrast adjustment
+            
             contrast = (self.contrast_slider.value() + 50) / 50.0
             image = cv2.convertScaleAbs(image, alpha=contrast, beta=0)
 
-            # Update contrast label
+           
             self.contrast_label.setText(f"Contraste: {self.contrast_slider.value()}%")
 
-            # Apply negative filter
+            
             if self.negative_button.isChecked():
                 image = cv2.bitwise_not(image)
 
-            # Apply color map
+            
             color_map = self.color_map_box.currentText()
             if (color_map != "Ninguno") and (
                 len(image.shape) == 2
-            ):  # Ensure it's a grayscale image before applying color map
+            ):  
                 colormaps = {
                     "Jet": cv2.COLORMAP_JET,
                     "Hot": cv2.COLORMAP_HOT,
@@ -291,10 +290,10 @@ class GraphicsView(QGraphicsView):
 
 def main():
     app = QApplication(sys.argv)
-    # Configurar el icono de la aplicación
+    
     app.setWindowIcon(
         QIcon("ruta/al/icono.ico")
-    )  # Asegúrate de poner la ruta correcta al archivo de icono
+    )  
     viewer = DICOMViewer()
     viewer.show()
     sys.exit(app.exec_())
