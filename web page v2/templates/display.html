@@ -1,0 +1,90 @@
+<!-- templates/display.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cabecera DICOM - {{ filename }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Cabecera DICOM: {{ filename }}</h2>
+        
+        <!-- Sección para Mostrar Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} mt-3" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+        <!-- Formulario de Búsqueda Avanzada -->
+        <div class="mt-4 mb-4">
+            <form method="POST" action="{{ url_for('advanced_search') }}">
+                {{ form.hidden_tag() }}
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label for="search_term" class="form-label">Término de Búsqueda</label>
+                        {{ form.search_term(class="form-control", id="search_term", placeholder="Ingresa término de búsqueda") }}
+                    </div>
+                    <div class="col-md-3">
+                        <label for="specific_key" class="form-label">Clave Específica</label>
+                        {{ form.specific_key(class="form-select", id="specific_key") }}
+                    </div>
+                    <div class="col-md-3">
+                        <label for="data_type" class="form-label">Tipo de Dato</label>
+                        {{ form.data_type(class="form-select", id="data_type") }}
+                    </div>
+                </div>
+                <div class="row g-3 align-items-end mt-3">
+                    <div class="col-md-3">
+                        <label for="min_value" class="form-label">Valor Mínimo</label>
+                        {{ form.min_value(class="form-control", id="min_value", placeholder="Opcional") }}
+                    </div>
+                    <div class="col-md-3">
+                        <label for="max_value" class="form-label">Valor Máximo</label>
+                        {{ form.max_value(class="form-control", id="max_value", placeholder="Opcional") }}
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+                        <a href="{{ url_for('upload_file') }}" class="btn btn-secondary">Limpiar Búsqueda</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        {% if header %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Clave</th>
+                            <th>Descripción</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in header.items() %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ key | replace('_', ' ') }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No se encontraron datos en la cabecera DICOM.</p>
+        {% endif %}
+        <a href="{{ url_for('upload_file') }}" class="btn btn-secondary mt-3">Volver</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Opcional: Añadir scripts personalizados -->
+    </body>
+</html>
