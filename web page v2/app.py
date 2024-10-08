@@ -71,7 +71,7 @@ def allowed_file(filename):
 @login_required
 def index():
     if current_user.role != "specialist" and current_user.role != "admin":
-        flash("Acceso restringido solo a especialistas médicos.", "danger")
+        flash("No te han asignado imágenes médicas aún. Contáctate con tu especialista si crees que es un error.", "danger")
         return redirect(url_for("logout"))
 
     if current_user.role == "admin":
@@ -84,7 +84,7 @@ def index():
 @login_required
 def upload_file():
     if current_user.role != "specialist" and current_user.role != "admin":
-        flash("Acceso restringido solo a especialistas médicos.", "danger")
+        flash("No te han asignado imágenes médicas aún. Contáctate con tu especialista si crees que es un error.", "danger")
         return redirect(url_for("logout"))
 
     if request.method == "POST":
@@ -125,15 +125,11 @@ def upload_file():
     return render_template("upload.html")
 
 
-def admin_dashboard():
-    return render_template("admin_dashboard.html")
-
-
 @app.route("/search", methods=["POST"])
 @login_required
 def search():
     if current_user.role != "specialist" and current_user.role != "admin":
-        flash("Acceso restringido solo a especialistas médicos.", "danger")
+        flash("No te han asignado imágenes médicas aún. Contáctate con tu especialista si crees que es un error.", "danger")
         return redirect(url_for("logout"))
 
     search_term = request.form.get("search_term", "").lower()
@@ -180,8 +176,9 @@ def signup():
         form = SignupFormEspecialist()
 
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, role=form.role.data)
-        new_user.set_email(form.email.data)
+        new_user = User(
+            username=form.username.data, email=form.email.data, role=form.role.data
+        )
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
@@ -197,13 +194,15 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
+        if user and user.check_password(form.password.data) and user.role != "patient":
             login_user(user)
             flash("Inicio de sesión exitoso.", "success")
             next_page = request.args.get("next")
             return redirect(next_page) if next_page else redirect(url_for("index"))
-        else:
+        elif user.role != "patient":
             flash("Nombre de usuario o contraseña inválidos.", "danger")
+        else:
+            flash("No te han asignado imágenes médicas aún. Contáctate con tu especialista si crees que es un error.", "danger")
     return render_template("login.html", form=form)
 
 
@@ -211,7 +210,7 @@ def login():
 @login_required
 def advanced_search():
     if current_user.role != "specialist" and current_user.role != "admin":
-        flash("Acceso restringido solo a especialistas médicos.", "danger")
+        flash("No te han asignado imágenes médicas aún. Contáctate con tu especialista si crees que es un error.", "danger")
         return redirect(url_for("logout"))
 
     form = SearchForm()
@@ -310,4 +309,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
