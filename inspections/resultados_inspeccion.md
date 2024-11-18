@@ -5,3 +5,12 @@
 
 **Evidencia:**  
 ![Screenshot del problema](QI1.png)
+
+
+## Quality Issue 2:
+**Descripción:** El código actual permite realizar redirecciones HTTP basadas en datos proporcionados por el usuario, lo que puede exponer el sistema a ataques de redirección abierta (open redirect attacks). Este tipo de vulnerabilidad puede ser explotado para redirigir a los usuarios hacia sitios maliciosos, facilitando ataques como phishing o robo de credenciales.
+
+**Severidad:** Este problema tiene un gran impacto en la seguridad de nuestro software.
+
+**Evidencia:**  
+![Screenshot del problema](QI2.png)
