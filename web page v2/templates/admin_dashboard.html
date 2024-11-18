@@ -19,6 +19,15 @@
         />
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/invertido.png') }}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Ocultar mensajes después de 5 segundos
+                setTimeout(function() {
+                    $('.alert').fadeOut('slow');
+                }, 3000); // 5000 milisegundos = 5 segundos
+            });
+        </script>
     </head>
 
     <body>
