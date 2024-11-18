@@ -17,7 +17,17 @@
             crossorigin="anonymous"
         />
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link rel="shortcut icon" href="../img/invertido.png">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+          $(document).ready(function() {
+              // Ocultar mensajes después de 5 segundos
+              setTimeout(function() {
+                  $('.alert').fadeOut('slow');
+              }, 3000); // 5000 milisegundos = 5 segundos
+          });
+        </script>
     </head>
 
     <body>
@@ -136,9 +146,11 @@
                                 <div class="text-danger">{{ error }}</div>
                             {% endfor %}
                         </div>
-          
-                        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
-          
+                        
+                        <div class="text-center mt-4"></div>
+                          <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+                          <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Volver</a>
+                        </div>
                       </form>
                     </div>
                   </div>
