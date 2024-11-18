@@ -1,5 +1,8 @@
-body {
-    background-color: #f8f9fa;
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #212f3c;
 }
 
 h1, h2 {
@@ -8,4 +11,69 @@ h1, h2 {
 
 table th, table td {
     vertical-align: middle !important;
+}
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.content-container {
+    background-color: white;
+    padding: 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px; /* Aumentar el ancho máximo */
+}
+
+.custom-btn-edit {
+    background-color: #4CAF50; /* Color verde */
+    border-color: #4CAF50;
+}
+.custom-btn-edit:hover {
+    background-color: #45a049; /* Color verde oscuro */
+    border-color: #45a049;
+}
+.custom-btn-volume {
+    background-color: #2196F3; /* Color azul */
+    border-color: #2196F3;
+}
+.custom-btn-volume:hover {
+    background-color: #0b7dda; /* Color azul oscuro */
+    border-color: #0b7dda;
+}
+.custom-btn-mip {
+    background-color: #f4e136; /* Color rojo */
+    border-color: #f4e136;
+}
+.custom-btn-mip:hover {
+    background-color: #dabb0b; /* Color rojo oscuro */
+    border-color: #dabb0b;
+}
+
+.dicom-header-content {
+    max-height: 400px; /* Altura máxima para el contenedor de la cabecera DICOM */
+    overflow-y: auto; /* Habilitar desplazamiento vertical */
+    margin-top: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.fade-out {
+    animation: fadeOut 1s ease-in-out;
 }
