@@ -2,89 +2,164 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Cabecera DICOM - {{ filename }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Visor DICOM</title>
+    <meta charset="utf-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/invertido.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#dicom-header-content').html(response);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Ocultar mensajes después de 5 segundos
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 3000); // 5000 milisegundos = 5 segundos
+        });
+    </script>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Cabecera DICOM: {{ filename }}</h2>
-        
-        <!-- Sección para Mostrar Mensajes Flash -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }} mt-3" role="alert">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-        
-        <!-- Formulario de Búsqueda Avanzada -->
-        <div class="mt-4 mb-4">
-            <form method="POST" action="{{ url_for('advanced_search') }}">
-                {{ form.hidden_tag() }}
-                <input type="hidden" name="filename" value="{{ filename }}">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label for="search_term" class="form-label">Término de Búsqueda</label>
-                        {{ form.search_term(class="form-control", id="search_term", placeholder="Ingresa término de búsqueda") }}
+    <div class="container py-5 h-100" data-aos="fade-up" data-aos-duration="700">
+        <div class="container centered-content">
+            <h2 class="text-center" style="color: white;">Visualizador DICOM</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mt-3" role="alert">
+                      {{ message }}
                     </div>
-                    <div class="col-md-3">
-                        <label for="specific_key" class="form-label">Clave Específica</label>
-                        {{ form.specific_key(class="form-select", id="specific_key") }}
-                    </div>
-                    <div class="col-md-3">
-                        <label for="data_type" class="form-label">Tipo de Dato</label>
-                        {{ form.data_type(class="form-select", id="data_type") }}
-                    </div>
+                  {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="content-container">   
+                <div class="text-center mt-4 mb-4">
+                    <img src="{{ url_for('uploaded_file', filename=image_filename) }}" alt="Imagen DICOM" class="img-fluid">
                 </div>
-                <div class="row g-3 align-items-end mt-3">
-                    <div class="col-md-3">
-                        <label for="min_value" class="form-label">Valor Mínimo</label>
-                        {{ form.min_value(class="form-control", id="min_value", placeholder="Opcional") }}
-                    </div>
-                    <div class="col-md-3">
-                        <label for="max_value" class="form-label">Valor Máximo</label>
-                        {{ form.max_value(class="form-control", id="max_value", placeholder="Opcional") }}
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
-                        <a href="{{ url_for('upload_file') }}" class="btn btn-secondary">Limpiar Búsqueda</a>
-                    </div>
+                <div class="text-center">
+                    <button id="show-header-btn" class="btn btn-primary">Mostrar Cabecera DICOM</button>
+                    <a href="{{ url_for('edit_image', filename=filename, image_filename=image_filename, processed_filename=image_filename) }}" class="btn btn-primary custom-btn-edit">Editar Imagen</a>
+                    <a href="{{ url_for('volume_view', filename=filename, image_filename=image_filename, study_id=filename.split('-')[1]) }}" class="btn btn-primary custom-btn-volume">Visualizar Volumen</a>
+                    <a href="{{ url_for('mip_view', filename=filename, image_filename=image_filename, study_id=filename.split('-')[1]) }}" class="btn btn-primary custom-btn-mip">Visualizar MIP</a>
                 </div>
-            </form>
-        </div>
-        
-        {% if header %}
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Clave</th>
-                            <th>Descripción</th>
-                            <th>Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value in header.items() %}
-                            <tr>
-                                <td>{{ key }}</td>
-                                <td>{{ key | replace('_', ' ') }}</td>
-                                <td>{{ value }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="text-center">
+                    <a href="{{ url_for('upload_file') }}" class="btn btn-secondary mt-3">Volver</a>
+                </div>
+
+                <hr class="my-4">
+                <!-- Formulario de Búsqueda Avanzada -->
+                <div id="dicom-header-content" class="dicom-header-content" style="display: none;">
+                    <div class="mt-4 mb-4">
+                        <form method="POST" action="{{ url_for('advanced_search') }}">
+                            {{ form.hidden_tag() }}
+                            <input type="hidden" name="filename" value="{{ filename }}">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label for="search_term" class="form-label">Término de Búsqueda</label>
+                                    {{ form.search_term(class="form-control", id="search_term", placeholder="Ingresa término de búsqueda") }}
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="specific_key" class="form-label">Clave Específica</label>
+                                    {{ form.specific_key(class="form-select", id="specific_key") }}
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="data_type" class="form-label">Tipo de Dato</label>
+                                    {{ form.data_type(class="form-select", id="data_type") }}
+                                </div>
+                            </div>
+                            <div class="row g-3 align-items-end mt-3">
+                                <div class="col-md-6 text-end">
+                                    <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+                                    <a href="{{ url_for('display', filename=filename, image_filename=image_filename) }}" class="btn btn-secondary">Limpiar Búsqueda</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                
+                    {% if header %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Clave</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in header.items() %}
+                                        <tr>
+                                            <td>{{ key }}</td>
+                                            <td>{{ value }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p>No se encontraron datos en la cabecera DICOM.</p>
+                    {% endif %}
+                </div>
             </div>
-        {% else %}
-            <p>No se encontraron datos en la cabecera DICOM.</p>
-        {% endif %}
-        <a href="{{ url_for('upload_file') }}" class="btn btn-secondary mt-3">Volver</a>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Opcional: Añadir scripts personalizados -->
+        </div>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.getElementById('show-header-btn').addEventListener('click', function() {
+                var content = document.getElementById('dicom-header-content');
+                var button = document.getElementById('show-header-btn');
+                if (content.style.display === 'none' || content.style.display === '') {
+                    content.classList.remove('fade-out');
+                    content.classList.add('fade-in');
+                    content.style.display = 'block';
+                    button.textContent = 'Ocultar Cabecera DICOM';
+                } else {
+                    content.classList.remove('fade-in');
+                    content.classList.add('fade-out');
+                    setTimeout(function() {
+                        content.style.display = 'none';
+                    }, 1000); // Duración de la animación fade-out
+                    button.textContent = 'Mostrar Cabecera DICOM';
+                }
+            });
+        </script>
+        <script
+          src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+          integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+          crossorigin="anonymous"
+        ></script>
+
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+          integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+          crossorigin="anonymous"
+        ></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+        AOS.init();
+        </script>
+        <!-- Opcional: Añadir scripts personalizados -->
     </body>
 </html>
