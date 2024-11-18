@@ -11,6 +11,7 @@ from flask import (
     url_for,
     flash,
     send_from_directory,
+    jsonify,
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
