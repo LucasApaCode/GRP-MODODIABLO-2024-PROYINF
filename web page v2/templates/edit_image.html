@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Imagen DICOM</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/invertido.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Ocultar mensajes después de 5 segundos
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 3000); // 5000 milisegundos = 5 segundos
+        });
+    </script>
+</head>
+<body>
+    <div class="container py-5 h-100" data-aos="fade-up" data-aos-duration="700">
+    <div class="container mt-5">
+        <div class="container centered-content">
+            <h2 class="text-center" style="color: white;">Editar Imagen DICOM: {{ filename }}</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} mt-3" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <div class="content-container">
+                <div class="text-center">
+                    <img src="{{ url_for('uploaded_file', filename=processed_filename) }}" alt="Imagen DICOM" class="img-fluid">
+                </div>
+
+                <form method="POST" class="mt-4">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="filter_type" class="form-label">Tipo de Filtro</label>
+                            <select class="form-select" id="filter_type" name="filter_type">
+                                <option value="none">Ninguno</option>
+                                <option value="negative">Negativo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="color_map" class="form-label">Mapa de Color</label>
+                            <select class="form-select" id="color_map" name="color_map">
+                                <option value="jet">Jet</option>
+                                <option value="hot">Caliente</option>
+                                <option value="bone">Bone</option>
+                                <option value="winter">Winter</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button type="submit" class="btn btn-primary">Aplicar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <a href="{{ url_for('display', filename=filename, image_filename=image_filename) }}" class="btn btn-secondary mt-3">Volver</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('filter_type').addEventListener('change', function() {
+            var contrastSlider = document.getElementById('contrast-slider');
+            var brightnessSlider = document.getElementById('brightness-slider');
+            if (this.value === 'contrast') {
+                contrastSlider.style.display = 'block';
+                brightnessSlider.style.display = 'none';
+            } else if (this.value === 'brightness') {
+                brightnessSlider.style.display = 'block';
+                contrastSlider.style.display = 'none';
+            } else {
+                contrastSlider.style.display = 'none';
+                brightnessSlider.style.display = 'none';
+            }
+        });
+    </script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+    ></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>
