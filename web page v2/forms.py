@@ -80,12 +80,8 @@ class SearchForm(FlaskForm):
             ("Str", "String"),
             ("Int", "Entero"),
             ("Float", "Flotante"),
-            ("Date", "Fecha"),
-            ("Time", "Hora"),
             # Añade más tipos de datos según sea necesario
         ],
         default="all",
     )
-    min_value = FloatField("Valor Mínimo", validators=[Optional()])
-    max_value = FloatField("Valor Máximo", validators=[Optional()])
     submit = SubmitField("Buscar")
