@@ -408,6 +408,78 @@ def edit_image(filename, image_filename, processed_filename):
     )
 
 
+@app.route(
+    "/medir/<filename>/<image_filename>/<processed_filename>",
+    methods=["GET", "POST"],
+)
+@login_required
+def medir(filename, image_filename, processed_filename):
+    if current_user.role != "specialist" and current_user.role != "admin":
+        flash(
+            "No tienes acceso a esta función. Solo los especialistas y administradores pueden editar imágenes.",
+            "danger",
+        )
+        return redirect(url_for("logout"))
+
+    filepath = os.path.join(app.config["UPLOAD_FOLDER"], image_filename)
+    image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+
+    if request.method == "POST":
+        # Guardar la imagen procesada
+        processed_filename = f"processed_{image_filename}"
+        processed_filepath = os.path.join(
+            app.config["UPLOAD_FOLDER"], processed_filename
+        )
+        cv2.imwrite(processed_filepath, image)
+        flash("Medición aplicada correctamente.", "success")
+        return redirect(
+            url_for(
+                "medir",
+                filename=filename,
+                image_filename=image_filename,
+                processed_filename=processed_filename,
+            )
+        )
+
+    return render_template(
+        "medir.html",
+        filename=filename,
+        image_filename=image_filename,
+        processed_filename=processed_filename,
+    )
+
+# Función para calcular la distancia entre dos puntos
+def calculate_distance(point1, point2):
+    distance = np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
+    return distance
+
+# Función para medir el área de un polígono
+def calculate_polygon_area(points):
+    contour = np.array(points, dtype=np.int32)
+    area = cv2.contourArea(contour)
+    return area
+
+
+
+# Ruta para realizar la medición (línea, polígono)
+@app.route('/measure', methods=['POST'])
+def measure():
+    data = request.json
+    measure_type = data.get('type')
+    points = data.get('points')
+    
+    if measure_type == 'line':
+        point1, point2 = points
+        distance = calculate_distance(point1, point2)
+        return jsonify({'measurement': distance, 'units': 'pixels'})
+    
+    elif measure_type == 'polygon':
+        area = calculate_polygon_area(points)
+        return jsonify({'measurement': area, 'units': 'pixels²'})
+    
+    return jsonify({'status': 'failed', 'message': 'Measurement type not supported'})
+
+
 @app.route("/admin_dashboard")
 @login_required
 def admin_dashboard():
